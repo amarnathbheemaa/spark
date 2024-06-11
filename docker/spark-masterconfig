@@ -1,0 +1,10 @@
+From python:3.10.8-slim
+WORKDIR /app/spark-masterconfig
+COPY . /app/spark-masterconfig
+RUN pip3 install -r requirements.txt
+RUN apt-get update -y
+RUN apt-get install curl -y
+EXPOSE 8000
+RUN chmod +x /app/spark-masterconfig/datadiscovery.sh
+CMD ["/app/spark-masterconfig/datadiscovery.sh"]
+# ENTRYPOINT ["python3", "/app/spark-securityscan/manage.py", "runserver", "0.0.0.0:8000"]
