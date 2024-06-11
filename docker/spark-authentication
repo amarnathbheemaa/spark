@@ -1,0 +1,10 @@
+From python:3.10.8-slim
+WORKDIR /app/spark-authentication
+COPY . /app/spark-authentication
+RUN pip3 install -r requirements.txt
+RUN apt-get update -y
+RUN apt-get install curl -y
+EXPOSE 8000
+RUN chmod +x /app/spark-authentication/datadiscovery.sh
+CMD ["/app/spark-authentication/datadiscovery.sh"]
+# ENTRYPOINT ["python3", "/app/spark-securityscan/manage.py", "runserver", "0.0.0.0:8000"]
