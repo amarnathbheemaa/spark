@@ -1,0 +1,59 @@
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: spark-securityscan
+  labels:
+    app: spark-securityscan
+    Platform: spark
+  namespace: spark
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: spark-securityscan
+  template:
+    metadata:
+      labels:
+        app: spark-securityscan
+    spec:
+      serviceAccountName: spark
+      containers:
+      - name: spark-securityscan
+        image: 424258464218.dkr.ecr.us-east-1.amazonaws.com/spark-securityscan:latest
+        ports:
+        - containerPort: 8000
+        livenessProbe:
+          httpGet:
+            path: "/securityscan"
+            port: 8000
+            scheme: HTTP
+          initialDelaySeconds: 60
+          timeoutSeconds: 10
+          periodSeconds: 30
+          successThreshold: 1
+          failureThreshold: 3
+        readinessProbe:
+          httpGet:
+            path: "/securityscan"
+            port: 8000
+            scheme: HTTP
+          initialDelaySeconds: 60
+          timeoutSeconds: 10
+          periodSeconds: 30
+          successThreshold: 1
+          failureThreshold: 3
+        resources:
+          requests:
+            cpu: 500m
+            memory: 1Gi
+          limits:
+            cpu: 500m
+            memory: 1Gi
+        env:
+        - name: project_env
+          value: development
+        - name: project_name
+          value: spark-securityscan
+        - name: env_name
+          value: dev
